@@ -2,8 +2,8 @@ import { Field, Float, ID, Int, ObjectType } from "@nestjs/graphql";
 
 @ObjectType()
 export class CreateUserDto{
-    @Field(()=>ID)
-    _id:String;
+    // @Field(()=>ID)
+    // _id:String;
 
     @Field()
     username:String;
