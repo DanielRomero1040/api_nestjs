@@ -10,6 +10,7 @@ import { UserSchema , User } from "./schemas/users.schema";
     {name:'users',schema:UserSchema}
   ])],
   providers: [ UsersService],
-  controllers: [UsersController]
+  controllers: [UsersController],
+  exports:[UsersService]
 })
 export class UsersModule {}

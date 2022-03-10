@@ -15,6 +15,11 @@ getById(@Param(`id`) id):Promise<UserInterface[]>{
     return this.usersService.getById(id);
 };
 
+@Get()
+getByUsername(@Body() username: string, password:string):Promise<UserInterface[] | undefined>{        
+    return this.usersService.getByUsername(username);
+};
+
 @Post()
 addUser(@Body() user: CreateUserDto):{}{
     return this.usersService.add(user);

@@ -33,59 +33,57 @@ export class UsersService {
         }
     };
 
-    async add(newUser : CreateUserDto){
-
-
-        let userToAdd = await this.userModel.create({
-            username:newUser.username,
-            password:newUser.password,
-            nombre:newUser.nombre,
-            direccion:newUser.direccion,
-            edad:newUser.edad,
-            telefono:newUser.telefono,
-            avatar:newUser.avatar
-        })
-        let msg ={
-            isProductAlreadyCreate:true,
-            userToAdd
+    async getByUsername(username){
+        try{
+            let user;
+            user = await this.userModel.find({
+                username
+            }).exec().catch((e)=>{});
+            if(!user){
+                user = [];
+            }
+            return user;
+        }catch(e){            
+            //throw new CustomError(500, "Error en ProductsDao getById");
         }
-        return msg;
+    }
 
-        // try{
-        //     //validar
-        //     let isUserAlreadyCreate = false;
-        //     let msg = {};
-        //     let user = await this.userModel.findOne({
-        //         username: newUser.username
-        //     });
-        //     console.log("User",user)
-        //     if(!user){
-        //         console.log("entra en el condicional")
-        //         let userToAdd = await this.userModel.create({
-        //             username:newUser.username,
-        //             password:newUser.password,
-        //             nombre:newUser.nombre,
-        //             direccion:newUser.direccion,
-        //             edad:newUser.edad,
-        //             telefono:newUser.telefono,
-        //             avatar:newUser.avatar
-        //         })
-        //         console.log('nuevo user',userToAdd);
-        //         msg ={
-        //             isUserAlreadyCreate: isUserAlreadyCreate,
-        //             user:userToAdd
-        //         }
-        //         return msg
-        //     }
-        //     msg ={
-        //         isProductAlreadyCreate:true,
-        //         user
-        //     }
-        //     return msg;
+    async add(newUser : CreateUserDto){
+        try{
+            //validar
+            let isUserAlreadyCreate = false;
+            let msg = {};
+            let user = await this.userModel.findOne({
+                username: newUser.username
+            });
+            console.log("User",user)
+            if(!user){
+                console.log("entra en el condicional")
+                let userToAdd = await this.userModel.create({
+                    username:newUser.username,
+                    password:newUser.password,
+                    name:newUser.name,
+                    email:newUser.email,
+                    age:newUser.age,
+                    phone:newUser.phone,
+                    avatar:newUser.avatar
+                })
+                console.log('nuevo user',userToAdd);
+                msg ={
+                    isUserAlreadyCreate: isUserAlreadyCreate,
+                    user:userToAdd
+                }
+                return msg
+            }
+            msg ={
+                isProductAlreadyCreate:true,
+                user
+            }
+            return msg;
 
-        // }catch(e){
-        //     //throw new CustomError(500, "Error en ProductsDao add");
-        // };
+        }catch(e){
+            //throw new CustomError(500, "Error en ProductsDao add");
+        };
 
     }
 

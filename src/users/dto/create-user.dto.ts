@@ -10,13 +10,13 @@ export class CreateUserDto{
     @Field()
     password:String;
     @Field()
-    nombre:String;
+    name:String;
     @Field({nullable:true})
-    direccion:String;
+    email:String;
     @Field(()=> Int,{nullable:true})
-    edad:Number;
+    age:Number;
     @Field(()=> Int,{nullable:true})
-    telefono:Number;
+    phone:Number;
     @Field({nullable:true})
     avatar:String
 
