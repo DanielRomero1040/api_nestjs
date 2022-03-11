@@ -4,7 +4,10 @@ import { User } from './schemas/users.schema';
 import { Model } from "mongoose";
 import { UserInterface } from './interfaces/User';
 import { CreateUserDto } from './dto/create-user.dto';
+import { encodePassword } from 'src/utils/bcrypt';
 //import { UserInput } from './input/user.input';
+
+
 
 @Injectable()
 export class UsersService {
@@ -36,11 +39,26 @@ export class UsersService {
     async getByUsername(username){
         try{
             let user;
-            user = await this.userModel.find({
+            user = await this.userModel.findOne({
+                username
+            }).select("+password").exec().catch((e)=>{});
+            if(!user){
+                user = {};
+            }
+            return user;
+        }catch(e){            
+            //throw new CustomError(500, "Error en ProductsDao getById");
+        }
+    }
+
+    async getByUsernamePrivate(username){
+        try{
+            let user;
+            user = await this.userModel.findOne({
                 username
             }).exec().catch((e)=>{});
             if(!user){
-                user = [];
+                user = {};
             }
             return user;
         }catch(e){            
@@ -53,31 +71,30 @@ export class UsersService {
             //validar
             let isUserAlreadyCreate = false;
             let msg = {};
-            let user = await this.userModel.findOne({
+            let usernameValidator = await this.userModel.findOne({
                 username: newUser.username
             });
-            console.log("User",user)
-            if(!user){
-                console.log("entra en el condicional")
-                let userToAdd = await this.userModel.create({
-                    username:newUser.username,
-                    password:newUser.password,
-                    name:newUser.name,
-                    email:newUser.email,
-                    age:newUser.age,
-                    phone:newUser.phone,
-                    avatar:newUser.avatar
-                })
-                console.log('nuevo user',userToAdd);
+            let emailValidator = await this.userModel.findOne({
+                email: newUser.email
+            });
+            
+            console.log("User",usernameValidator)
+            console.log("email",emailValidator)
+            if(usernameValidator ||emailValidator ){
+                
                 msg ={
-                    isUserAlreadyCreate: isUserAlreadyCreate,
-                    user:userToAdd
+                    isUserAlreadyCreate:true,
+                    user: usernameValidator || emailValidator
                 }
                 return msg
             }
+            const password = encodePassword(newUser.password);
+            console.log(password)
+            let userToAdd = await this.userModel.create({ ...newUser, password})
+            console.log('nuevo user',userToAdd);
             msg ={
-                isProductAlreadyCreate:true,
-                user
+                isUserAlreadyCreate: isUserAlreadyCreate,
+                user:userToAdd
             }
             return msg;
 

@@ -8,7 +8,7 @@ export class CreateUserDto{
     @Field()
     username:String;
     @Field()
-    password:String;
+    password:string;
     @Field()
     name:String;
     @Field({nullable:true})
