@@ -1,10 +1,15 @@
 import { Logger } from '@nestjs/common';
-import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WsResponse } from '@nestjs/websockets';
+import { MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { CreateChatDto } from './chat/dto/create-chat.dto';
 
-@WebSocketGateway()
+@WebSocketGateway({ namespace: 'websocket' })
 export class AppGateway implements OnGatewayInit, OnGatewayConnection,OnGatewayDisconnect {
+  
   private logger:Logger = new Logger('AppGateway');
+  
+  @WebSocketServer()
+  server;
 
   afterInit(server: Server) {
     this.logger.log('Initialized');
@@ -18,8 +23,10 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection,OnGatewayD
     this.logger.log(`Client connected: ${client.id}`);
   }
 
-  @SubscribeMessage('msgToServer')
-  handleMessage(client: Socket, text: string): WsResponse<string> {
-    return {event:'msgToClient',data:'Hello world!'};
+  @SubscribeMessage('message')
+  handleMessage(@MessageBody() message: CreateChatDto): void {
+    this.server.emit('message', message);
+    
+    console.log(message)
   }
 }

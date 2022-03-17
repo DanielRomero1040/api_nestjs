@@ -37,6 +37,7 @@
     "dotenv": "^16.0.0",
     "express-session": "^1.17.2",
     "graphql": "^16.3.0",
+    "hbs": "^4.2.0",
     "mongoose": "^6.2.2",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",

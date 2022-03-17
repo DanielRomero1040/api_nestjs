@@ -7,4 +7,5 @@ export interface Product extends Document{
     stock:Number;
     price:Number;
     id?:string;
+    
 }
